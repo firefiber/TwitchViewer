@@ -33,25 +33,6 @@ let users = document.querySelector('button#users');
 //users.onclick = getUsers;
 // ----------TEMPORARY THINGS
 
-// Gets streams based on the set list of usersnames - only displays live streams.
-function getStreams() {
-    const usernames = setList.map((elem) => {
-        return `user_login=${elem}`;
-    }).join("&");
-    let reqType = 'streams?';
-    request.open('GET', `${endpoint+reqType+usernames}`);
-    request.setRequestHeader('Client-ID', "mmsj66xshsa6xtk024r136cawnweyw");
-    request.send();
-
-    request.onload = function () {
-        let resp = JSON.parse(request.response);
-        if (resp.data.length > 0) {
-            resp.data.forEach(elem => userID_streams.push(elem));
-        }
-        console.log(resp, userID_streams);
-    }
-}
-
 // Gets user information from set list of usernames - displays all users, regardless of live or offline.
 function getUsers() {
     const usernames = setList.map((elem) => {
@@ -67,7 +48,27 @@ function getUsers() {
         if (resp.data.length > 0) {
             resp.data.forEach(elem => userID_users.push(elem));
         }
-        console.log(resp, userID_users);
+//        console.log(resp, userID_users);
+        getStreams();
+    }
+}
+
+// Gets streams based on the set list of usersnames - only displays live streams.
+function getStreams() {
+    const usernames = setList.map((elem) => {
+        return `user_login=${elem}`;
+    }).join("&");
+    let reqType = 'streams?';
+    request.open('GET', `${endpoint+reqType+usernames}`);
+    request.setRequestHeader('Client-ID', "mmsj66xshsa6xtk024r136cawnweyw");
+    request.send();
+
+    request.onload = function () {
+        let resp = JSON.parse(request.response);
+        if (resp.data.length > 0) {
+            resp.data.forEach(elem => userID_streams.push(elem));
+        }
+        console.log(userID_streams);
         buildLinks();
     }
 }
@@ -78,20 +79,49 @@ function checkLiveUsers() {
         for (let b of userID_streams) {
             if (a.id == b.user_id) {
                 liveUsers[`${a.display_name}`] = [a, b];
+                return true;
             }
+        }
+    }
+}
+
+// Checks if current user [passed as param] is currently live
+function checkIfLive(user){
+    for(let key of userID_streams){
+        if(key.user_id == user.id){
+            return true;
         }
     }
 }
 
 // Creates links to each profile - opens in a new tab
 function buildLinks() {
-    let linkBox = document.getElementById('links');
+//    getStreams();
+    let userList = document.querySelector('ul');
     userID_users.forEach(elem => {
-        let link = document.createElement('a');
-        link.href = `https://twitch.tv/${elem.login}`;
-        link.textContent = `${elem.display_name}`;
-        link.setAttribute('target', '_blank');
-        linkBox.appendChild(link);
+        let listItem = document.createElement('li');
+        let listLink = document.createElement('a');
+        let userImg = document.createElement('img');
+        let userStatus = document.createElement('p');
+
+        listLink.href = `https://twitch.tv/${elem.login}`;
+        listLink.textContent = `${elem.display_name}`;
+        listLink.setAttribute('target', '_blank');
+
+        userImg.src = `${elem.profile_image_url}`;
+
+        if(checkIfLive(elem)){
+            userStatus.textContent = 'Live';
+        } else{
+            userStatus.textContent = 'Offline';
+        }
+
+//        console.log(elem);
+
+        listItem.appendChild(listLink);
+        listItem.appendChild(userStatus);
+        listItem.appendChild(userImg);
+        userList.appendChild(listItem);
     })
 }
 

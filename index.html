@@ -14,13 +14,22 @@
 <body>
 
     <header>
-        <i class="fa fa-twitch"></i>
-        <h1>twitch_//fcc</h1>
-        <i class="fa fa-free-code-camp"></i>
-
+        <div id="headerText">
+            <i class="fa fa-twitch"></i>
+            <h1>twitch_//fcc</h1>
+            <i class="fa fa-free-code-camp"></i>
+        </div>
     </header>
     <section id="mainWrapper">
-        <div id="links"></div>
+        <nav>
+            <button id="btn_top">_top5</button>
+            <button id="btn_all">_fcc-list</button>
+            <button id="btn_offline">_fcc-offline</button>
+        </nav>
+        <div id="streamList">
+            <ul>
+            </ul>
+        </div>
     </section>
     <footer></footer>
     <script src="js/script.js"></script>
