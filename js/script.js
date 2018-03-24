@@ -25,13 +25,16 @@ let userID_users = [];
 let liveUsers = {};
 let request = new XMLHttpRequest();
 
-//TEMPORARY THINGS
+// ----------TEMPORARY THINGS
 let streams = document.querySelector('button#streams');
 let users = document.querySelector('button#users');
-let link = document.querySelector('a');
+//let link = document.querySelector('a');
+//streams.onclick = getStreams;
+//users.onclick = getUsers;
+// ----------TEMPORARY THINGS
 
 // Gets streams based on the set list of usersnames - only displays live streams.
-streams.onclick = function () {
+function getStreams() {
     const usernames = setList.map((elem) => {
         return `user_login=${elem}`;
     }).join("&");
@@ -50,7 +53,7 @@ streams.onclick = function () {
 }
 
 // Gets user information from set list of usernames - displays all users, regardless of live or offline.
-users.onclick = function () {
+function getUsers() {
     const usernames = setList.map((elem) => {
         return `login=${elem}`;
     }).join("&");
@@ -65,18 +68,40 @@ users.onclick = function () {
             resp.data.forEach(elem => userID_users.push(elem));
         }
         console.log(resp, userID_users);
-        checkLiveUsers();
+        buildLinks();
     }
 }
 
 // Finds out which users are live by comparing userIDs from 'streams' and 'users' - adds matching to `liveUsers` object.
-function checkLiveUsers(){
-    for (let a of userID_users){
-        for(let b of userID_streams){
-            if(a.id == b.user_id){
-                liveUsers[`${a.display_name}`]=[a,b];
+function checkLiveUsers() {
+    for (let a of userID_users) {
+        for (let b of userID_streams) {
+            if (a.id == b.user_id) {
+                liveUsers[`${a.display_name}`] = [a, b];
             }
         }
     }
 }
 
+// Creates links to each profile - opens in a new tab
+function buildLinks() {
+    let linkBox = document.getElementById('links');
+    userID_users.forEach(elem => {
+        let link = document.createElement('a');
+        link.href = `https://twitch.tv/${elem.login}`;
+        link.textContent = `${elem.display_name}`;
+        link.setAttribute('target', '_blank');
+        linkBox.appendChild(link);
+    })
+}
+
+(function () {
+    getUsers();
+})();
+
+
+
+
+
+
+//  Future: Add search functionality

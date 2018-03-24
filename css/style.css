@@ -1,0 +1,9 @@
+header {
+    border: 1px solid black;
+
+}
+
+h1 {
+    font-family: 'IBM Plex Mono', monospace;
+    display: inline;
+}
