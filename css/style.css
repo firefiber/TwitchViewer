@@ -1,15 +1,16 @@
 body {
     font-family: 'Lato';
-    background-color: #212020;
+    background-color: #f4f6f7;
 }
 header {
     /*    border: 1px solid black;*/
     width: 100%;
     background-color: #3498db ;
+    font-family: 'IBM Plex Mono', monospace;
+
 }
 
 h1 {
-    font-family: 'IBM Plex Mono', monospace;
     color: #ecf0f1;
     display: inline;
 }
@@ -20,9 +21,12 @@ header > *{
     text-shadow: 1px 0.9px 4px rgba(0,0,0,0.6);
 }
 nav > button{
-    background-color: #ecf0f1;
-    color: #ff5733;
+    background-color: #eb6725;
+    color: #ecf0f1;
     font-weight: bold;
+}
+#content a{
+    color: #eb6725;
 }
 div.stream {
     /*    border: 1px solid black;*/
@@ -30,7 +34,7 @@ div.stream {
 
 @media all and (max-width: 500px) {
     header {
-        height: 80px;
+        height: 100%;
     }
     #headerText {
         text-align: center;
@@ -44,19 +48,20 @@ div.stream {
         font-size: 1.5em;
     }
     nav {
+        display: flex;
+        margin-top: 20px;
         text-align: center;
 
     }
     nav > button{
-        width: 33.3%;
+        flex-grow: 1;
         margin:0;
         padding:0;
         height: 30px;
-        border-right: 2px solid rgba(28, 40, 51, 0.4);
+        border-right: 1px solid rgba(28, 40, 51, 0.4);
         box-shadow: 1px 0.5px 2px rgba(0,0,0,0.4);
         border-bottom-right-radius: 4px;
     }
-
     nav > button:last-child{
         border-right: none;
     }
@@ -65,18 +70,31 @@ div.stream {
         border-bottom: 2px solid rgba(0,0,0,0.2);
     }
 
+    #mainWrapper{
+        margin-top: 1px;
+    }
+
     img {
         width: 80px;
         height: 80px;
         display: block;
     }
-    .stream p {
+    .stream_desc > p {
         padding: 0;
         margin: 5px 15px 0 15px;
-        color: #ff5733;
+        color: #3498db;
     }
-    .stream_desc {}
+    .stream_desc > p:last-child {
+        padding-top: 10px;
+        font-size: .8em;
+
+
+    }
+    .stream_desc {
+
+    }
     .username {
+        padding-top: 50px;
         float: left;
         clear: both;
     }
@@ -100,10 +118,13 @@ div.stream {
         position: absolute;
         right: 0;
         text-align: right;
-        ;
         float: right;
         font-size: 0.8em;
     }
-    .game {}
+    .game{
+        clear:both;
+        margin-top: 15px;
+    }
+
 
 }
