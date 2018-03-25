@@ -2,32 +2,37 @@ body {
     font-family: 'Lato';
     background-color: #f4f6f7;
 }
+
 header {
     /*    border: 1px solid black;*/
     width: 100%;
-    background-color: #3498db ;
+    background-color: #3498db;
     font-family: 'IBM Plex Mono', monospace;
-
 }
 
 h1 {
     color: #ecf0f1;
     display: inline;
 }
-i{
-    color:#ecf0f1;
+
+i {
+    color: #ecf0f1;
 }
-header > *{
-    text-shadow: 1px 0.9px 4px rgba(0,0,0,0.6);
+
+header > * {
+    text-shadow: 1px 0.9px 4px rgba(0, 0, 0, 0.6);
 }
-nav > button{
+
+nav > button {
     background-color: #eb6725;
     color: #ecf0f1;
     font-weight: bold;
 }
-#content a{
+
+#content a {
     color: #eb6725;
 }
+
 div.stream {
     /*    border: 1px solid black;*/
 }
@@ -51,26 +56,25 @@ div.stream {
         display: flex;
         margin-top: 20px;
         text-align: center;
-
     }
-    nav > button{
-        flex-grow: 1;
-        margin:0;
-        padding:0;
+    nav > button {
+        width: 100%;
+        margin: 0;
+        padding: 0;
         height: 30px;
         border-right: 1px solid rgba(28, 40, 51, 0.4);
-        box-shadow: 1px 0.5px 2px rgba(0,0,0,0.4);
+        box-shadow: 1px 0.5px 2px rgba(0, 0, 0, 0.4);
         border-bottom-right-radius: 4px;
     }
-    nav > button:last-child{
+    nav > button:last-child {
         border-right: none;
     }
     .stream {
         display: flex;
-        border-bottom: 2px solid rgba(0,0,0,0.2);
+        border-bottom: 2px solid rgba(0, 0, 0, 0.2);
     }
 
-    #mainWrapper{
+    #mainWrapper {
         margin-top: 1px;
     }
 
@@ -87,12 +91,8 @@ div.stream {
     .stream_desc > p:last-child {
         padding-top: 10px;
         font-size: .8em;
-
-
     }
-    .stream_desc {
-
-    }
+    .stream_desc {}
     .username {
         padding-top: 50px;
         float: left;
@@ -107,7 +107,7 @@ div.stream {
         font-size: 1.5em;
     }
     .status_offline:after {
-        content: "\f011";
+        content: "\f204";
         color: gray;
         padding-left: 5px;
         vertical-align: middle;
@@ -121,10 +121,12 @@ div.stream {
         float: right;
         font-size: 0.8em;
     }
-    .game{
-        clear:both;
+    .game {
+        clear: both;
         margin-top: 15px;
     }
-
-
 }
+
+/*TODO: Move all colors outside of media query*/
+/*TODO: Display "loading" message along with icon in the middle of page*/
+/*TODO: Change "live" icon. */
