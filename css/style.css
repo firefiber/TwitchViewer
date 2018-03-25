@@ -37,6 +37,33 @@ div.stream {
     /*    border: 1px solid black;*/
 }
 
+/* Loading Animation */
+
+#loading{
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 15px;
+}
+
+#loading i{
+    padding-top: px;
+}
+
+#loading p{
+    display: inline;
+    font-size: 1.1em;
+    letter-spacing: 3px;
+    color: #3498db;
+    font-style: italic;
+}
+
+.hidden{
+    display: none;
+}
+
+.fa-spinner{
+    color: #3498db;
+}
 @media all and (max-width: 500px) {
     header {
         height: 100%;
@@ -69,6 +96,14 @@ div.stream {
     nav > button:last-child {
         border-right: none;
     }
+
+    button:hover{
+        background-color: #e16425;
+    }
+    button:active{
+        box-shadow: 0 2px rgba(0,0,0, 0.2);
+    }
+
     .stream {
         display: flex;
         border-bottom: 2px solid rgba(0, 0, 0, 0.2);
@@ -98,21 +133,20 @@ div.stream {
         float: left;
         clear: both;
     }
-    .status_live:after {
-        content: "\f205";
-        color: green;
+
+    .status_live:after, .status_offline:after{
         padding-left: 5px;
         vertical-align: middle;
         font-family: FontAwesome;
         font-size: 1.5em;
     }
+    .status_live:after {
+        content: "\f205";
+        color: green;
+    }
     .status_offline:after {
         content: "\f204";
-        color: gray;
-        padding-left: 5px;
-        vertical-align: middle;
-        font-family: FontAwesome;
-        font-size: 1.5em;
+        color: black;
     }
     .status {
         position: absolute;
@@ -127,6 +161,12 @@ div.stream {
     }
 }
 
+@media all and (min-width: 501px) and (max-width: 800px){
+
+}
+
 /*TODO: Move all colors outside of media query*/
-/*TODO: Display "loading" message along with icon in the middle of page*/
-/*TODO: Change "live" icon. */
+/*TODO[x]: Display "loading" message along with icon in the middle of page*/
+/*TODO[x]: Change "live" icon. */
+/*TODO: Make media query for max 800px*/
+/*TODO: Make media query for min 1200px and above*/

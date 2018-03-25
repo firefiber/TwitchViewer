@@ -1,5 +1,7 @@
 const setList = ["ESL_SC2", "OgamingSC2", "cretetion", "freecodecamp", "storbeck", "habathcx", "RobotCaleb", "noobs2ninjas"];
 const endpoint = "https://api.twitch.tv/helix/";
+
+// Data holders
 let userID_streams = []; //Stores live streamer data (live status, game name, etc);
 let userID_users = []; //Stores all streamer data (display name, profile img, etc);
 let gameIDstring; // String of game ID's appended with 'id=' before each.
@@ -7,10 +9,14 @@ let userIDstring; // String of user ID's appended with 'id=' before each.
 let topToggle = 0; // Check if TOP8 button pressed to stop new API calls.
 let fccToggle = 0; // Check if FCC button pressed to stop new API calls.
 let request = new XMLHttpRequest();
+
+// Page selectors
 const content = document.querySelector('#content'); // Div where data is displayed. Cleared out on call.
+const loading = document.querySelector('#loading'); // Div to display 'loading' message.
 
 // Gets user information from set list of usernames - displays all users, regardless of live or offline.
 function getUsers(users) {
+    spin();
     let usernames;
     if (users == null) {
         usernames = setList.map((elem) => {
@@ -123,7 +129,7 @@ function getGameName(gameList) {
 
 // Creates all the elements to display results on the page.
 function buildLinks() {
-    content.innerHTML = "";
+    spin();
     /*  Checks if current user [passed as param] is currently live by matching userID's from 'streams' and 'users'
         For each user that's live, add a 'name' property to userID_stream with the name of the game being played. */
     userID_users.forEach(elem => {
@@ -211,9 +217,14 @@ function fccStreamers() {
 
         getUsers();
     }
-
 }
 
+function spin(){
+    loading.classList.toggle('hidden');
+    content.innerHTML = "";
+}
+
+// On page load, grab buttons, assign event lisnters to them and make inital API call with set user list.
 (function () {
     getUsers();
 
@@ -229,6 +240,6 @@ function fccStreamers() {
 
 
 
-// TODO: Add "loading" message when API call in progress
+// TODO[x]: Add "loading" message when API call in progress
 // TODO: Convert game name to title case
 // Future: Add search functionality
