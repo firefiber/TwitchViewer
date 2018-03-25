@@ -1,19 +1,23 @@
 header {
-    border: 1px solid black;
+/*    border: 1px solid black;*/
     width: 100%;
 
 }
-
+body{
+    font-family: 'Lato';
+}
 h1 {
     font-family: 'IBM Plex Mono', monospace;
     display: inline;
+}
+div.stream{
+/*    border: 1px solid black;*/
 }
 
 @media all and (max-width: 500px){
     header{
        height: 80px;
     }
-
     #headerText{
         text-align: center;
         margin-top: 20px;
@@ -28,10 +32,34 @@ h1 {
     nav{
         text-align: center;
     }
+    .stream{
+        display:flex;
+    }
     img{
         width: 80px;
         height: 80px;
         display: block;
+    }
+    .stream p{
+        padding: 0;
+        margin: 5px 15px 0 15px;
+    }
+    .stream_desc{
+
+    }
+    .username{
+        float:left;
+        clear:both;
+
+    }
+    .status{
+        position:absolute;
+        right: 0;
+        text-align: right;
+        float: right;
+    }
+    .game{
+
     }
 
 }
