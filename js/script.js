@@ -107,43 +107,56 @@ function getGameName(gameList) {
 
 //Creates all the elements to display results on the page.
 function buildLinks() {
-    let userList = document.querySelector('ul');
+    const content = document.querySelector('#content');
     /*  Checks if current user [passed as param] is currently live by matching userID's from 'streams' and 'users'
         For each user that's live, add a 'name' property to userID_stream with the name of the game being played. */
     userID_users.forEach(elem => {
         function checkIfLive(user) {
             for (let key of userID_streams) {
                 if (key.user_id == user.id) {
-                    game.textContent = key.name;
+                    userGame.textContent = key.name;
                     return true;
                 }
             }
         }
-        let listItem = document.createElement('li');
-        let listLink = document.createElement('a');
-        let userImg = document.createElement('img');
-        let userStatus = document.createElement('p');
-        let game = document.createElement('p');
+        const mainDiv = document.createElement('div');
+        const imgDiv = document.createElement('div');
+        const textDiv = document.createElement('div');
+        const userLinkText = document.createElement('p');
+        const userLinkUrl = document.createElement('a');
+        const userImg = document.createElement('img');
+        const userStatus = document.createElement('p');
+        const userGame = document.createElement('p');
 
-        listLink.href = `https://twitch.tv/${elem.login}`;
-        listLink.textContent = `${elem.display_name}`;
-        listLink.setAttribute('target', '_blank');
+        userLinkUrl.href = `https://twitch.tv/${elem.login}`;
+        userLinkUrl.textContent = `${elem.display_name}`;
+        userLinkUrl.setAttribute('target', '_blank');
 
         userImg.src = `${elem.profile_image_url}`;
 
         if (checkIfLive(elem)) {
             userStatus.textContent = 'Live';
-            console.log(Object.keys(userID_streams[0]));
-            console.log(Object.getOwnPropertyDescriptor(userID_streams[0], "name"));
+
         } else {
             userStatus.textContent = 'Offline';
         }
 
-        listItem.appendChild(userImg);
-        listItem.appendChild(listLink);
-        listItem.appendChild(userStatus);
-        listItem.appendChild(game);
-        userList.appendChild(listItem);
+        userLinkText.appendChild(userLinkUrl);
+        imgDiv.appendChild(userImg);
+        textDiv.appendChild(userLinkText);
+        textDiv.appendChild(userStatus);
+        textDiv.appendChild(userGame);
+
+        userLinkText.classList.add('username');
+        userStatus.classList.add('status');
+        userGame.classList.add('game');
+        mainDiv.classList.add('stream');
+        imgDiv.classList.add('stream_img');
+        textDiv.classList.add('stream_desc');
+
+        mainDiv.appendChild(imgDiv);
+        mainDiv.appendChild(textDiv);
+        content.appendChild(mainDiv);
     })
 }
 
