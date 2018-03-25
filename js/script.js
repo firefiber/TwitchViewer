@@ -1,40 +1,26 @@
-//ClientID: mmsj66xshsa6xtk024r136cawnweyw
-//Twitch API endpoint: https://api.twitch.tv/helix/
-//Generate link to live stream: https://twitch.tv/streams/:stream.id/channel/:stream.user_id
-
-//List:
-
-//Streams: /streams?
-//Username: user_login=
-//UserID: user_id=
-//Limits: first=
-//Live: type=live|vodcast|""
-//Next: after=
-//Back: before=
-
-//RESPONSE
-//Thumbs: .thumbnail_url [width]x[height];
-//GameID: .game_id
-//Title: .title
-//Viewers: .viewer_count
-
 const setList = ["ESL_SC2", "OgamingSC2", "cretetion", "freecodecamp", "storbeck", "habathcx", "RobotCaleb", "noobs2ninjas"];
 const endpoint = "https://api.twitch.tv/helix/";
-let userID_streams = []; //Stores stream details from api call [for "setList" users] - only returns streams that are live.
-let userID_users = []; //Stores user details from api call [for "setList" users].
+let userID_streams = []; //Stores live streamer data (live status, game name, etc);
+let userID_users = []; //Stores all streamer data (display name, profile img, etc);
+let gameIDstring; // String of game ID's appended with 'id=' before each.
+let userIDstring; // String of user ID's appended with 'id=' before each.
+let topToggle = 0; // Check if TOP8 button pressed to stop new API calls.
+let fccToggle = 0; // Check if FCC button pressed to stop new API calls.
 let request = new XMLHttpRequest();
+const content = document.querySelector('#content'); // Div where data is displayed. Cleared out on call.
 
 
-// ----------TEMPORARY THINGS
-
-// ----------TEMPORARY THINGS
 
 // Gets user information from set list of usernames - displays all users, regardless of live or offline.
-function getUsers(userList) {
-    const usernames = setList.map((elem) => {
-        return `login=${elem}`;
-    }).join("&");
-    let reqType = 'users?'
+function getUsers(users) {
+    let usernames;
+    if(users == null){
+        usernames = setList.map((elem) => {
+            return `login=${elem}`;
+        }).join("&");
+    } else usernames = users;
+
+    const reqType = 'users?'
     request.open('GET', `${endpoint+reqType+usernames}`);
     request.setRequestHeader('Client-ID', "mmsj66xshsa6xtk024r136cawnweyw");
     request.send();
@@ -47,7 +33,9 @@ function getUsers(userList) {
             });
 
         }
-        getStreams();
+        if(gameIDstring == null){
+            getStreams();
+        } else getGameName();
     }
 }
 
@@ -57,7 +45,7 @@ function getStreams(userList) {
     const usernames = setList.map((elem) => {
         return `user_login=${elem}`;
     }).join("&");
-    let reqType = 'streams?';
+    const reqType = 'streams?';
     request.open('GET', `${endpoint+reqType+usernames}`);
     request.setRequestHeader('Client-ID', "mmsj66xshsa6xtk024r136cawnweyw");
     request.send();
@@ -85,10 +73,40 @@ function getStreams(userList) {
     }
 }
 
+// Makes API call to get top 8 live streamers. Stores userIDs and gameIDs.
+function getTop8() {
+    let reqType = `streams?first=8`;
+    request.open('GET', `${endpoint+reqType}`);
+    request.setRequestHeader('Client-ID', "mmsj66xshsa6xtk024r136cawnweyw");
+    request.send();
+
+    request.onload = function () {
+        let resp = JSON.parse(request.response).data;
+        let uID = [];
+        let gID = [];
+        resp.forEach(elem => {
+            uID.push(elem.user_id);
+            gID.push(elem.game_id);
+            userID_streams.push(elem);
+        });
+        userIDstring = uID.map(elem => {
+            return `id=${elem}`;
+        }).join('&');
+        gameIDstring = gID.map(elem => {
+            return `id=${elem}`;
+        }).join('&');
+        getUsers(userIDstring);
+    }
+}
+
 // Make API call to get game info based on given game ID's - gets 'name' property and stores in userID_streams.Calls 'buildLinks' when done.
 function getGameName(gameList) {
+    let games;
+    if(gameList == null){
+        games = gameIDstring;
+    } else games = gameList;
     const reqType = 'games?';
-    request.open('GET', `${endpoint+reqType+gameList}`);
+    request.open('GET', `${endpoint+reqType+games}`);
     request.setRequestHeader('Client-ID', "mmsj66xshsa6xtk024r136cawnweyw");
     request.send();
 
@@ -105,17 +123,22 @@ function getGameName(gameList) {
     }
 }
 
-//Creates all the elements to display results on the page.
+// Creates all the elements to display results on the page.
 function buildLinks() {
-    const content = document.querySelector('#content');
+    content.innerHTML = "";
     /*  Checks if current user [passed as param] is currently live by matching userID's from 'streams' and 'users'
         For each user that's live, add a 'name' property to userID_stream with the name of the game being played. */
     userID_users.forEach(elem => {
         function checkIfLive(user) {
             for (let key of userID_streams) {
                 if (key.user_id == user.id) {
-                    userGame.textContent = key.name;
-                    return true;
+                    if(key.name == null){
+                        userGame.textContent = "Not In Game."
+                        return true;
+                    } else {
+                        userGame.textContent = "Game: " +key.name;
+                        return true;
+                    }
                 }
             }
         }
@@ -136,9 +159,10 @@ function buildLinks() {
 
         if (checkIfLive(elem)) {
             userStatus.textContent = 'Live';
-
+            userStatus.classList.add('status_live');
         } else {
             userStatus.textContent = 'Offline';
+            userStatus.classList.add('status_offline');
         }
 
         userLinkText.appendChild(userLinkUrl);
@@ -160,22 +184,49 @@ function buildLinks() {
     })
 }
 
-function getTop8(){
-    let reqType = `streams?first=8`;
-    request.open('GET', `${endpoint+reqType}`);
-    request.setRequestHeader('Client-ID', "mmsj66xshsa6xtk024r136cawnweyw");
-    request.send();
-
-    request.onload = function(){
-        let resp = JSON.parse(request.response).data;
-        console.log(resp);
+// Checks if button was already pressed through toggle (topToggle). If pressed, stops. If not, clears all counters, and makes fresh API call to get users > game names > display data.
+function topStreamers(){
+    if(topToggle == 1){
+        return;
+    } else{
+        userID_users = [];
+        userID_streams = [];
+        gameIDstring = null;
+        userIDstring = null;
+        topToggle = 1;
+        fccToggle = 0;
+        getTop8();
     }
+
 }
 
+// Checks if button was already pressed through toggle (fccToggle). If pressed, stops. If not, clears all counters, and makes fresh API call to get users through set list.
+function fccStreamers(){
+    if (fccToggle == 1){
+        return;
+    } else{
+        userID_streams = [];
+        userID_users = [];
+        gameIDstring = null;
+        userIDString = null;
+        fccToggle = 1;
+        topToggle = 0;
+
+        getUsers();
+    }
+
+}
 
 (function () {
     getUsers();
+
+    const topBtn = document.getElementById('btn_top');
+    const allBtn = document.getElementById('btn_all');
+
+    topBtn.onclick = topStreamers;
+    allBtn.onclick = fccStreamers;
 })();
+
 
 
 
