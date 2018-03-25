@@ -9,12 +9,10 @@ let fccToggle = 0; // Check if FCC button pressed to stop new API calls.
 let request = new XMLHttpRequest();
 const content = document.querySelector('#content'); // Div where data is displayed. Cleared out on call.
 
-
-
 // Gets user information from set list of usernames - displays all users, regardless of live or offline.
 function getUsers(users) {
     let usernames;
-    if(users == null){
+    if (users == null) {
         usernames = setList.map((elem) => {
             return `login=${elem}`;
         }).join("&");
@@ -33,7 +31,7 @@ function getUsers(users) {
             });
 
         }
-        if(gameIDstring == null){
+        if (gameIDstring == null) {
             getStreams();
         } else getGameName();
     }
@@ -102,7 +100,7 @@ function getTop8() {
 // Make API call to get game info based on given game ID's - gets 'name' property and stores in userID_streams.Calls 'buildLinks' when done.
 function getGameName(gameList) {
     let games;
-    if(gameList == null){
+    if (gameList == null) {
         games = gameIDstring;
     } else games = gameList;
     const reqType = 'games?';
@@ -132,11 +130,11 @@ function buildLinks() {
         function checkIfLive(user) {
             for (let key of userID_streams) {
                 if (key.user_id == user.id) {
-                    if(key.name == null){
+                    if (key.name == null) {
                         userGame.textContent = "Not In Game."
                         return true;
                     } else {
-                        userGame.textContent = "Game: " +key.name;
+                        userGame.textContent = "Game: " + key.name;
                         return true;
                     }
                 }
@@ -185,10 +183,10 @@ function buildLinks() {
 }
 
 // Checks if button was already pressed through toggle (topToggle). If pressed, stops. If not, clears all counters, and makes fresh API call to get users > game names > display data.
-function topStreamers(){
-    if(topToggle == 1){
+function topStreamers() {
+    if (topToggle == 1) {
         return;
-    } else{
+    } else {
         userID_users = [];
         userID_streams = [];
         gameIDstring = null;
@@ -197,14 +195,13 @@ function topStreamers(){
         fccToggle = 0;
         getTop8();
     }
-
 }
 
 // Checks if button was already pressed through toggle (fccToggle). If pressed, stops. If not, clears all counters, and makes fresh API call to get users through set list.
-function fccStreamers(){
-    if (fccToggle == 1){
+function fccStreamers() {
+    if (fccToggle == 1) {
         return;
-    } else{
+    } else {
         userID_streams = [];
         userID_users = [];
         gameIDstring = null;
@@ -223,24 +220,15 @@ function fccStreamers(){
     const topBtn = document.getElementById('btn_top');
     const allBtn = document.getElementById('btn_all');
 
-    topBtn.onclick = topStreamers;
-    allBtn.onclick = fccStreamers;
+    topBtn.addEventListener('click', topStreamers);
+    allBtn.addEventListener('click', fccStreamers);
+
+    //    topBtn.onclick = topStreamers;
+    //    allBtn.onclick = fccStreamers;
 })();
 
 
 
-
-
-//  Future: Add search functionality
-
-//// Finds out which users are live by comparing userIDs from 'streams' and 'users' - adds matching to `liveUsers` object.
-//function checkLiveUsers() {
-//    for (let a of userID_users) {
-//        for (let b of userID_streams) {
-//            if (a.id == b.user_id) {
-//                liveUsers[`${a.display_name}`] = [a, b];
-//                return true;
-//            }
-//        }
-//    }
-//}
+// TODO: Add "loading" message when API call in progress
+// TODO: Convert game name to title case
+// Future: Add search functionality
